@@ -1,29 +1,28 @@
 #!/bin/bash
 #Script for change syntax in project from PHP
-#New comment
 operation=$1
 project_name=$2
-#Check the exist two arguments
+#Check the exist two arguments, name of operation and syntax project_name
 if [[ -z "$operation" || -z "$project_name" ]]; then
-    echo "You are must entered two arguments!"
+    	    echo "Usage is: $0 (create | update) project_name"
+	    echo "Only A-Z,a-z,_and. is available in project name"
     exit 1
+fi
+if [[ $operation != "create" && $operation != "update" ]]; then
+  	    echo "Usage is: $0 (create | update) project_name"
+	    echo "Only A-Z,a-z,_and. is available in project name"
+    exit 1
+fi
+if [[ ! $project_name =~ ^[a-z_-.]+$ ]]; then
+	    echo "Usage is: $0 (create | update) project_name"
+	    echo "Only A-Z,a-z,_and. is available in project name"
+    exit 1
+fi
 #If entered two arguments, entered path to project and check exist of folder
-else
     echo "Enter all path on your project:"
     read project_path
     if [[ ! -d "$project_path"  ]]; then
 	echo "Not found folder of your project!"
 	exit 1
     fi
-fi
-#Choose from two values of operation
-if [[ $operation != "create" && $operation != "update" ]]; then
-    echo "Wrong name of $operation, only create or update!"
-    exit 1
-fi
-#Check name of project from syntax errors 
-if [[ ! $project_name =~ ^[a-z_-.]+$ ]]; then
-    echo "You entered wrong name of project! Argument $project_name must contain only symbol -a-z.-_"
-    exit 1
-fi
 exit 0
