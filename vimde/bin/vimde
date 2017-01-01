@@ -3,6 +3,7 @@
 operation=$1
 project_name=$2
 project_language=3
+project_type=5
 #Check the exist two arguments, name of operation and syntax project_name
 if [[ -z "$operation" || -z "$project_name" ]]; then
     	    echo "Usage is: $0 (create | update) project_name"
@@ -50,5 +51,42 @@ fi
 
 #Check value of variable project_language
 echo "Your choice is $project_language"
+
+#Choiсe the project_type of four variants     
+while [[ $project_type -ne 1 && $project_type -ne 2 && $project_type -ne 3 && $project_type -ne 4 ]]
+do     
+    echo "Please, specify project type (1-4)"
+    echo "1.Plain php"
+    echo "2.Drupal"
+    echo "3.Magento"
+    echo "4.Symfony"
+    read project_type
+   
+    if [[ $project_type -ne 1 && $project_type -ne 2 && $project_type -ne 3 && $project_type -ne 4 ]]; then
+	echo "wrong choice, please enter value 1-4"
+    fi
+
+done
+
+if [[ $project_type -eq  1 ]]; then
+    project_type="Plain_php"
+fi
+
+if [[ $project_type -eq  2 ]]; then
+    project_type="Drupal"
+fi
+
+if [[ $project_type -eq  3 ]]; then
+    project_type="Magento"
+fi
+
+if [[ $project_type -eq  4 ]]; then
+    project_type="Symfony"
+fi
+
+
+#Check value of variable project_type
+echo "Your choice is $project_type"
+
 
 exit 0
