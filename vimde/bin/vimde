@@ -2,6 +2,7 @@
 #Script for change syntax in project from PHP
 operation=$1
 project_name=$2
+project_language=3
 #Check the exist two arguments, name of operation and syntax project_name
 if [[ -z "$operation" || -z "$project_name" ]]; then
     	    echo "Usage is: $0 (create | update) project_name"
@@ -25,4 +26,29 @@ fi
 	echo "Not found folder of your project!"
 	exit 1
     fi
+#Choiсe the project_language of two variants     
+while [[ $project_language -ne 1 && $project_language -ne 2 ]]
+do     
+    echo "Please, specify language (1-2)"
+    echo "1.Php"
+    echo "2.Python"
+    read project_language
+   
+    if [[ $project_language -ne 1 && $project_language -ne 2 ]]; then
+	echo "wrong choice, please enter 1 or 2"
+    fi
+
+done
+
+if [[ $project_language -eq  1 ]]; then
+    project_language="Php"
+fi
+
+if [[ $project_language -eq  2 ]]; then
+    project_language="Python"
+fi
+
+#Check value of variable project_language
+echo "Your choice is $project_language"
+
 exit 0
