@@ -5,6 +5,7 @@ project_name=$2
 project_language=3
 project_type=5
 vim_version=4
+color_scheme=5
 #Check the exist two arguments, name of operation and syntax project_name
 if [[ -z "$operation" || -z "$project_name" ]]; then
     	    echo "Usage is: $0 (create | update) project_name"
@@ -118,5 +119,40 @@ fi
 
 #Check value of variable vim_version
 echo "Your choice is $vim_version"
+
+#Choiсe the color_scheme of four variants     
+while [[ $color_scheme -ne 1 && $color_scheme -ne 2 && $color_scheme -ne 3 && $color_scheme -ne 4 ]]
+do     
+    echo "Please, specify color scheme (1-4)"
+    echo "1.Desert"
+    echo "2.Gruvbox"
+    echo "3.Atom"
+    echo "4.Sublime"
+    read color_scheme
+   
+    if [[ $color_scheme -ne 1 && $color_scheme -ne 2 && $color_scheme -ne 3 && $color_scheme -ne 4 ]]; then
+	echo "wrong choice, please enter value 1-4"
+    fi
+
+done
+
+if [[ $color_scheme -eq  1 ]]; then
+    color_scheme="Desert"
+fi
+
+if [[ $color_scheme -eq  2 ]]; then
+    color_scheme="Gruvbox"
+fi
+
+if [[ $color_scheme -eq  3 ]]; then
+    color_scheme="Atom"
+fi
+
+if [[ $color_scheme -eq  4 ]]; then
+    color_scheme="Sublime"
+fi
+
+#Check value of variable color_scheme
+echo "Your choice is $color_scheme"
 
 exit 0
