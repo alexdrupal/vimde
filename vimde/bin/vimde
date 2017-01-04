@@ -1,29 +1,156 @@
 #!/bin/bash
 #Script for change syntax in project from PHP
-#New comment
 operation=$1
 project_name=$2
-#Check the exist two arguments
-if [[ -z "$operation" || -z "$project_name" ]]; then
-    echo "You are must entered two arguments!"
-    exit 1
-#If entered two arguments, entered path to project and check exist of folder
-else
-    echo "Enter all path on your project:"
-    read project_path
-    if [[ ! -d "$project_path"  ]]; then
-	echo "Not found folder of your project!"
-	exit 1
-    fi
-fi
-#Choose from two values of operation
+project_language=0
+project_type=0
+vim_version=0
+color_scheme=0
+Usage ()
+{
+    echo "Usage is: $0 (create | update) project_name"
+    echo "Only A-Z,a-z,_and. is available in project name"
+}
+#Check the exist two arguments, name of operation and syntax project_name
 if [[ $operation != "create" && $operation != "update" ]]; then
-    echo "Wrong name of $operation, only create or update!"
+    Usage
     exit 1
 fi
-#Check name of project from syntax errors 
 if [[ ! $project_name =~ ^[a-z_-.]+$ ]]; then
-    echo "You entered wrong name of project! Argument $project_name must contain only symbol -a-z.-_"
+    Usage
     exit 1
 fi
+#If entered two arguments, entered path to project and check exist of folder
+echo "Enter all path on your project:"
+read project_path
+if [[ ! -d "$project_path"  ]]; then
+    echo "Not found folder of your project!"
+    exit 1
+fi
+#Choiсe the project_language of two variants
+while [[ ! $project_language =~ ^[1-2]+$  ]]
+do
+    echo "Please, specify language (1-2)"
+    echo "1.Php"
+    echo "2.Python"
+    read project_language
+
+    if [[ ! $project_language =~ ^[1-2]+$ ]]; then
+	echo "wrong choice, please enter 1 or 2"
+    fi
+
+done
+
+if [[ $project_language -eq  1 ]]; then
+    project_language="php"
+fi
+
+if [[ $project_language -eq  2 ]]; then
+    project_language="python"
+fi
+
+#Check value of variable project_language
+echo "Your choice is $project_language"
+
+#Choiсe the project_type of four variants
+while [[ ! $project_type =~ ^[1-4]+$ ]]
+do
+    echo "Please, specify project type (1-4)"
+    echo "1.Plain php"
+    echo "2.Drupal"
+    echo "3.Magento"
+    echo "4.Symfony"
+    read project_type
+
+    if [[ ! $project_type =~ ^[1-4]+$ ]]; then
+	echo "wrong choice, please enter value 1-4"
+    fi
+
+done
+
+if [[ $project_type -eq  1 ]]; then
+    project_type="plain_php"
+fi
+
+if [[ $project_type -eq  2 ]]; then
+    project_type="drupal"
+fi
+
+if [[ $project_type -eq  3 ]]; then
+    project_type="magento"
+fi
+
+if [[ $project_type -eq  4 ]]; then
+    project_type="symfony"
+fi
+
+
+#Check value of variable project_type
+echo "Your choice is $project_type"
+
+#Choiсe the vim_version of three variants
+while [[ ! $vim_version =~ ^[1-3]+$ ]]
+do
+    echo "Please, specify vim version (1-3)"
+    echo "1.Console VIM"
+    echo "2.GVIM"
+    echo "3.MacVIM"
+    read vim_version
+
+    if [[ ! $vim_version =~ ^[1-3]+$ ]]; then
+	echo "wrong choice, please enter value 1-3"
+    fi
+
+done
+
+if [[ $vim_version -eq  1 ]]; then
+    vim_version="console_vim"
+fi
+
+if [[ $vim_version -eq  2 ]]; then
+    vim_version="gvim"
+fi
+
+if [[ $vim_version -eq  3 ]]; then
+    vim_version="macvim"
+fi
+
+#Check value of variable vim_version
+echo "Your choice is $vim_version"
+
+#Choiсe the color_scheme of four variants
+while [[ ! $color_scheme =~ ^[1-4]+$ ]]
+do
+    echo "Please, specify color scheme (1-4)"
+    echo "1.Desert"
+    echo "2.Gruvbox"
+    echo "3.Atom"
+    echo "4.Sublime"
+    read color_scheme
+
+    if [[ ! $color_scheme =~ ^[1-4]+$ ]]; then
+	echo "wrong choice, please enter value 1-4"
+    fi
+
+done
+
+if [[ $color_scheme -eq  1 ]]; then
+    color_scheme="desert"
+fi
+
+if [[ $color_scheme -eq  2 ]]; then
+    color_scheme="gruvbox"
+fi
+
+if [[ $color_scheme -eq  3 ]]; then
+    color_scheme="atom"
+fi
+
+if [[ $color_scheme -eq  4 ]]; then
+    color_scheme="sublime"
+fi
+
+#Check value of variable color_scheme
+echo "Your choice is $color_scheme"
+
 exit 0
