@@ -6,6 +6,8 @@ project_language=0
 project_type=0
 vim_version=0
 color_scheme=0
+project_license=0
+project_author=0
 Usage ()
 {
     echo "Usage is: $0 (create | update) project_name"
@@ -152,5 +154,55 @@ fi
 
 #Check value of variable color_scheme
 echo "Your choice is $color_scheme"
+
+#Create a hide folder in a home directory and gluing final vim config on three templates
+#cat $HOME/vimde/templates/project_language/main.vimrc $HOME/vimde/templates/project_language/project_type.vimrc $HOME/vimde/templates/project_language/keys.vimrc > $HOME/.vimde/project_name/config.vimrc
+
+#Specify the project_license of five variants
+while [[ ! $project_license =~ ^[1-5]+$ ]]
+do
+    echo "Please, choose the project license (1-5)"
+    echo "1.GPL2 "
+    echo "2.GPL3"
+    echo "3.OSL"
+    echo "4.Apache"
+    echo "5.MIT"
+    read project_license
+
+    if [[ ! $project_license =~ ^[1-5]+$ ]]; then
+	echo "wrong choice, please enter value 1-5"
+    fi
+
+done
+
+if [[ $project_license -eq  1 ]]; then
+    project_license="gpl2"
+fi
+
+if [[ $project_license -eq  2 ]]; then
+    project_license="gpl3"
+fi
+
+if [[ $project_license -eq  3 ]]; then
+    project_license="osl"
+fi
+
+if [[ $project_license -eq  4 ]]; then
+    project_license="apache"
+fi
+
+if [[ $project_license -eq  5 ]]; then
+    project_license="mit"
+fi
+
+#Check value of variable project_license
+echo "Your choice is $project_license"
+
+echo ""
+echo "Please enter your credentials. Example: John Doe jdoe@site.com"
+read project_author
+
+#Check value of variable project_author
+echo "Your credentials is $project_author"
 
 exit 0
