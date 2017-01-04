@@ -156,6 +156,7 @@ fi
 echo "Your choice is $color_scheme"
 
 #Create a hide folder in a home directory and gluing final vim config on three templates
+mkdir -p $HOME/.vimde/$project_name
 cat "$HOME/vimde/templates/$project_language/main.vimrc" "$HOME/vimde/templates/$project_language/$project_type.vimrc" "$HOME/vimde/templates/$project_language/keys.vimrc" > "$HOME/.vimde/$project_name/config.vimrc"
 
 #Specify the project_license of five variants
