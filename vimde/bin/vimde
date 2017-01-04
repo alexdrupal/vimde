@@ -150,4 +150,7 @@ if [[ $color_scheme -eq  4 ]]; then
     color_scheme="sublime"
 fi
 
+#Check value of variable color_scheme
+echo "Your choice is $color_scheme"
+
 exit 0
