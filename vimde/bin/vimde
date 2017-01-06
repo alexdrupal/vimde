@@ -8,10 +8,12 @@ vim_version=0
 color_scheme=0
 project_license=0
 project_author=0
+GREEN='\033[1;32m'
+NORMAL='\033[0m'
 Usage ()
 {
-    echo "Usage is: $0 (create | update) project_name"
-    echo "Only A-Z,a-z,_and. is available in project name"
+  echo -e "${GREEN} Usage is: $0 (create | update) project_name ${NORMAL}"
+  echo -e "${GREEN} Only A-Z,a-z,_and. is available in project name ${NORMAL}"
 }
 #Check the exist two arguments, name of operation and syntax project_name
 if [[ $operation != "create" && $operation != "update" ]]; then
@@ -23,22 +25,29 @@ if [[ ! $project_name =~ ^[a-z_-.]+$ ]]; then
     exit 1
 fi
 #If entered two arguments, entered path to project and check exist of folder
-echo "Enter all path on your project:"
+echo -e "${GREEN} Enter all path on your project: ${NORMAL}"
 read project_path
 if [[ ! -d "$project_path"  ]]; then
-    echo "Not found folder of your project!"
+    echo -e "${GREEN} Not found folder of your project! ${NORMAL}"
     exit 1
 fi
 #Choiсe the project_language of two variants
-while [[ ! $project_language =~ ^[1-2]+$  ]]
+#Uncommrnt this loop and delete low loop, if python language is aviable
+#while [[ ! $project_language =~ ^[1-2]+$  ]]
+while [[ ! $project_language =~ ^[1]+$  ]]
 do
-    echo "Please, specify language (1-2)"
-    echo "1.Php"
-    echo "2.Python"
+    echo -e "${GREEN} Please, specify language (1-2) ${NORMAL}"
+    echo -e "${GREEN} 1.Php ${NORMAL}"
+    #echo -e "${GREEN} 2.Python"
     read project_language
 
-    if [[ ! $project_language =~ ^[1-2]+$ ]]; then
-	echo "wrong choice, please enter 1 or 2"
+    #Uncomment this block if python language is aviable
+    #if [[ ! $project_language =~ ^[1-2]+$ ]]; then
+    #echo -e "${GREEN} wrong choice, please enter 1 or 2 ${NORMAL}"
+    #fi
+    #If top block uncommented, then delete this block
+    if [[ ! $project_language =~ ^[1]+$ ]]; then
+    echo -e "${GREEN} wrong choice, please enter 1 ${NORMAL}"
     fi
 
 done
@@ -46,26 +55,26 @@ done
 if [[ $project_language -eq  1 ]]; then
     project_language="php"
 fi
-
-if [[ $project_language -eq  2 ]]; then
-    project_language="python"
-fi
+#Uncomment this if block if python language is aviable
+#if [[ $project_language -eq  2 ]]; then
+#    project_language="python"
+#fi
 
 #Check value of variable project_language
-echo "Your choice is $project_language"
+echo -e "${GREEN} Your choice is $project_language ${NORMAL}"
 
 #Choiсe the project_type of four variants
 while [[ ! $project_type =~ ^[1-4]+$ ]]
 do
-    echo "Please, specify project type (1-4)"
-    echo "1.Plain php"
-    echo "2.Drupal"
-    echo "3.Magento"
-    echo "4.Symfony"
+    echo -e "${GREEN} Please, specify project type (1-4) ${NORMAL}"
+    echo -e "${GREEN} 1.Plain php ${NORMAL}"
+    echo -e "${GREEN} 2.Drupal ${NORMAL}"
+    echo -e "${GREEN} 3.Magento ${NORMAL}"
+    echo -e "${GREEN} 4.Symfony ${NORMAL}"
     read project_type
 
     if [[ ! $project_type =~ ^[1-4]+$ ]]; then
-	echo "wrong choice, please enter value 1-4"
+	echo -e "${GREEN} wrong choice, please enter value 1-4 ${NORMAL}"
     fi
 
 done
@@ -88,19 +97,19 @@ fi
 
 
 #Check value of variable project_type
-echo "Your choice is $project_type"
+echo -e "${GREEN} Your choice is $project_type ${NORMAL}"
 
 #Choiсe the vim_version of three variants
 while [[ ! $vim_version =~ ^[1-3]+$ ]]
 do
-    echo "Please, specify vim version (1-3)"
-    echo "1.Console VIM"
-    echo "2.GVIM"
-    echo "3.MacVIM"
+    echo -e "${GREEN} Please, specify vim version (1-3) ${NORMAL}"
+    echo -e "${GREEN} 1.Console VIM ${NORMAL}"
+    echo -e "${GREEN} 2.GVIM ${NORMAL}"
+    echo -e "${GREEN} 3.MacVIM ${NORMAL}"
     read vim_version
 
     if [[ ! $vim_version =~ ^[1-3]+$ ]]; then
-	echo "wrong choice, please enter value 1-3"
+	echo -e "${GREEN} wrong choice, please enter value 1-3 ${NORMAL}"
     fi
 
 done
@@ -118,20 +127,20 @@ if [[ $vim_version -eq  3 ]]; then
 fi
 
 #Check value of variable vim_version
-echo "Your choice is $vim_version"
+echo -e "${GREEN} Your choice is $vim_version ${NORMAL}"
 
 #Choiсe the color_scheme of four variants
 while [[ ! $color_scheme =~ ^[1-4]+$ ]]
 do
-    echo "Please, specify color scheme (1-4)"
-    echo "1.Desert"
-    echo "2.Gruvbox"
-    echo "3.Atom"
-    echo "4.Sublime"
+    echo -e "${GREEN} Please, specify color scheme (1-4) ${NORMAL}"
+    echo -e "${GREEN} 1.Desert ${NORMAL}" 
+    echo -e "${GREEN} 2.Gruvbox ${NORMAL}"
+    echo -e "${GREEN} 3.Atom ${NORMAL}"
+    echo -e "${GREEN} 4.Sublime ${NORMAL}"
     read color_scheme
 
     if [[ ! $color_scheme =~ ^[1-4]+$ ]]; then
-	echo "wrong choice, please enter value 1-4"
+	echo -e "${GREEN} wrong choice, please enter value 1-4 ${NORMAL}"
     fi
 
 done
@@ -153,7 +162,7 @@ if [[ $color_scheme -eq  4 ]]; then
 fi
 
 #Check value of variable color_scheme
-echo "Your choice is $color_scheme"
+echo -e "${GREEN} Your choice is $color_scheme ${NORMAL}"
 
 #Create a hide folder in a home directory and gluing final vim config on three templates
 mkdir -p $HOME/.vimde/$project_name
@@ -162,16 +171,16 @@ cat "$HOME/vimde/templates/$project_language/main.vimrc" "$HOME/vimde/templates/
 #Specify the project_license of five variants
 while [[ ! $project_license =~ ^[1-5]+$ ]]
 do
-    echo "Please, choose the project license (1-5)"
-    echo "1.GPL2 "
-    echo "2.GPL3"
-    echo "3.OSL"
-    echo "4.Apache"
-    echo "5.MIT"
+    echo -e "${GREEN} Please, choose the project license (1-5) ${NORMAL}"
+    echo -e "${GREEN} 1.GPL2 ${NORMAL}"
+    echo -e "${GREEN} 2.GPL3 ${NORMAL}"
+    echo -e "${GREEN} 3.OSL ${NORMAL}"
+    echo -e "${GREEN} 4.Apache ${NORMAL}"
+    echo -e "${GREEN} 5.MIT ${NORMAL}"
     read project_license
 
     if [[ ! $project_license =~ ^[1-5]+$ ]]; then
-	echo "wrong choice, please enter value 1-5"
+	echo -e "${GREEN} wrong choice, please enter value 1-5 ${NORMAL}"
     fi
 
 done
@@ -197,13 +206,13 @@ if [[ $project_license -eq  5 ]]; then
 fi
 
 #Check value of variable project_license
-echo "Your choice is $project_license"
+echo -e "${GREEN} Your choice is $project_license ${NORMAL}"
 
 echo ""
-echo "Please enter your credentials. Example: John Doe jdoe@site.com"
+echo -e "${GREEN} Please enter your credentials. Example: John Doe jdoe@site.com ${NORMAL}"
 read project_author
 
 #Check value of variable project_author
-echo "Your credentials is $project_author"
+echo -e "${GREEN} Your credentials is $project_author ${NORMAL}"
 
 exit 0
