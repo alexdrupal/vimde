@@ -34,7 +34,7 @@ fi
 #Choiсe the project_language of two variants
 #Uncommrnt this loop and delete low loop, if python language is aviable
 #while [[ ! $project_language =~ ^[1-2]+$  ]]
-while [[ ! $project_language =~ ^[1]+$  ]]
+while [[ ! $project_language =~ ^[1]$  ]]
 do
     echo -e "${GREEN} Please, specify language (1-2) ${NORMAL}"
     echo -e "${GREEN} 1.Php ${NORMAL}"
@@ -46,7 +46,7 @@ do
     #echo -e "${GREEN} wrong choice, please enter 1 or 2 ${NORMAL}"
     #fi
     #If top block uncommented, then delete this block
-    if [[ ! $project_language =~ ^[1]+$ ]]; then
+    if [[ ! $project_language =~ ^[1]$ ]]; then
     echo -e "${GREEN} wrong choice, please enter 1 ${NORMAL}"
     fi
 
@@ -64,7 +64,7 @@ fi
 echo -e "${GREEN} Your choice is $project_language ${NORMAL}"
 
 #Choiсe the project_type of four variants
-while [[ ! $project_type =~ ^[1-4]+$ ]]
+while [[ ! $project_type =~ ^[1-4]$ ]]
 do
     echo -e "${GREEN} Please, specify project type (1-4) ${NORMAL}"
     echo -e "${GREEN} 1.Plain php ${NORMAL}"
@@ -73,7 +73,7 @@ do
     echo -e "${GREEN} 4.Symfony ${NORMAL}"
     read project_type
 
-    if [[ ! $project_type =~ ^[1-4]+$ ]]; then
+    if [[ ! $project_type =~ ^[1-4]$ ]]; then
 	echo -e "${GREEN} wrong choice, please enter value 1-4 ${NORMAL}"
     fi
 
@@ -100,7 +100,7 @@ fi
 echo -e "${GREEN} Your choice is $project_type ${NORMAL}"
 
 #Choiсe the vim_version of three variants
-while [[ ! $vim_version =~ ^[1-3]+$ ]]
+while [[ ! $vim_version =~ ^[1-3]$ ]]
 do
     echo -e "${GREEN} Please, specify vim version (1-3) ${NORMAL}"
     echo -e "${GREEN} 1.Console VIM ${NORMAL}"
@@ -108,7 +108,7 @@ do
     echo -e "${GREEN} 3.MacVIM ${NORMAL}"
     read vim_version
 
-    if [[ ! $vim_version =~ ^[1-3]+$ ]]; then
+    if [[ ! $vim_version =~ ^[1-3]$ ]]; then
 	echo -e "${GREEN} wrong choice, please enter value 1-3 ${NORMAL}"
     fi
 
@@ -130,7 +130,7 @@ fi
 echo -e "${GREEN} Your choice is $vim_version ${NORMAL}"
 
 #Choiсe the color_scheme of four variants
-while [[ ! $color_scheme =~ ^[1-4]+$ ]]
+while [[ ! $color_scheme =~ ^[1-4]$ ]]
 do
     echo -e "${GREEN} Please, specify color scheme (1-4) ${NORMAL}"
     echo -e "${GREEN} 1.Desert ${NORMAL}" 
@@ -139,7 +139,7 @@ do
     echo -e "${GREEN} 4.Sublime ${NORMAL}"
     read color_scheme
 
-    if [[ ! $color_scheme =~ ^[1-4]+$ ]]; then
+    if [[ ! $color_scheme =~ ^[1-4]$ ]]; then
 	echo -e "${GREEN} wrong choice, please enter value 1-4 ${NORMAL}"
     fi
 
@@ -169,7 +169,7 @@ mkdir -p $HOME/.vimde/$project_name
 cat "$HOME/vimde/templates/$project_language/main.vimrc" "$HOME/vimde/templates/$project_language/$project_type.vimrc" "$HOME/vimde/templates/$project_language/keys.vimrc" > "$HOME/.vimde/$project_name/config.vimrc"
 
 #Specify the project_license of five variants
-while [[ ! $project_license =~ ^[1-5]+$ ]]
+while [[ ! $project_license =~ ^[1-5]$ ]]
 do
     echo -e "${GREEN} Please, choose the project license (1-5) ${NORMAL}"
     echo -e "${GREEN} 1.GPL2 ${NORMAL}"
@@ -179,7 +179,7 @@ do
     echo -e "${GREEN} 5.MIT ${NORMAL}"
     read project_license
 
-    if [[ ! $project_license =~ ^[1-5]+$ ]]; then
+    if [[ ! $project_license =~ ^[1-5]$ ]]; then
 	echo -e "${GREEN} wrong choice, please enter value 1-5 ${NORMAL}"
     fi
 
