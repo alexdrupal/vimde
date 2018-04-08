@@ -1,0 +1,12 @@
+TODO:
+
+* add tags file generation for project.
+* add best php autocomplete:
+    * https://robertbasic.com/blog/current-vim-setup-for-php-development/
+    * http://web-techno.net/vim-php-ide/
+* add refactoring plugins for PHP
+* add zencoding
+* add surround
+* setup autocomplete keys for basic autocompletion: words from current buffers, from tags
+* provide .vimprojects example
+* extend README and explain how to setup basic directory for your projects
