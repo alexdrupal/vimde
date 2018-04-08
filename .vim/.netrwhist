@@ -1,0 +1,3 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_1='/stuff/projects/private/rumarket-shops.ru/app/code/local/DruGento/BelPost/Helper'

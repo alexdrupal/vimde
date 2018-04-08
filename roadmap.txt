@@ -10,3 +10,5 @@ TODO:
 * setup autocomplete keys for basic autocompletion: words from current buffers, from tags
 * provide .vimprojects example
 * extend README and explain how to setup basic directory for your projects
+* memoize the top5 usefull refactoring methods(probably add them into README) : https://github.com/adoy/vim-php-refactoring-toolbox
+* install & configure easytags plugin.
