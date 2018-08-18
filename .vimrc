@@ -2,6 +2,29 @@ set nocompatible
 
 set t_Co=256
 
+call plug#begin('~/.vim/plugged')
+
+Plug 'scrooloose/nerdtree'
+Plug 'sheerun/vim-polyglot'
+Plug 'joshdick/onedark.vim'
+Plug 'itchyny/lightline.vim'
+Plug 'amiorin/vim-project'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'scrooloose/syntastic'
+Plug 'mattn/emmet-vim'
+Plug 'sirver/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'StanAngeloff/php.vim'
+Plug 'mileszs/ack.vim'
+Plug 'skwp/greplace.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'stephpy/vim-php-cs-fixer'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+call plug#end()
+
 "Show cursor position everytime
 set ruler		
 
@@ -9,7 +32,7 @@ set ruler
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7" 
 
-" Set the desert color scheme
+" Set the color scheme
 colorscheme onedark
 
 " Set font
@@ -270,3 +293,10 @@ let g:gutentags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
                             \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
                             \ '*var/cache*', '*var/log*']
 let g:gutentags_cache_dir = '~/.vim/gutentags'
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+set grepprg=ag
+let g:grep_cmd_opts = '--line-numbers --noheading'
