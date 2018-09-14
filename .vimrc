@@ -22,6 +22,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'stephpy/vim-php-cs-fixer'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'majutsushi/tagbar'
 
 call plug#end()
 
@@ -90,6 +91,17 @@ set mousehide
 
 " Enable autoindent
 set autoindent
+
+let g:tagbar_type_php  = {
+  \ 'ctagstype' : 'php',
+  \ 'kinds'     : [
+      \ 'i:interfaces',
+      \ 'c:classes',
+      \ 'd:constant definitions',
+      \ 'f:functions',
+      \ 'j:javascript functions:1'
+    \ ]
+\ }
 
 if has("autocmd")
     "Drupal *.module and *.install files.
@@ -206,14 +218,9 @@ vmap <F10> <esc>:bd<cr>
 imap <F10> <esc>:bd<cr>
 
 " F11 - show taglist window
-map <F11> :TlistToggle<cr>
-vmap <F11> <esc>:TlistToggle<cr>
-imap <F11> <esc>:TlistToggle<cr>
-
-" F12 - show netrw
-map <F12> :Ex<cr>
-vmap <F12> <esc>:Ex<cr>i
-imap <F12> <esc>:Ex<cr>
+map <F11> :TagbarToggle<cr>
+vmap <F11> <esc>:TagbarToggle<cr>
+imap <F11> <esc>:TagbarToggle<cr>
 
 " < & > - indents blocks
 vmap < <gv
@@ -264,12 +271,6 @@ au FileType php set omnifunc=phpcomplete#CompletePHP
 let g:SessionMgr_AutoManage = 0
 let g:SessionMgr_DefaultName = "mysession"
 
-" Taglist settings
-let g:Tlist_Show_One_File = 1
-let g:Tlist_Use_Right_Window = 1
-let Tlist_Sort_Type = "name"
-let Tlist_WinWidth = 50
-
 " Complete options
 set completeopt-=preview
 set completeopt+=longest
@@ -280,12 +281,23 @@ let g:netrw_browse_split = 3
 
 " phpDocumentor
 " 
-inoremap <C-P> <ESC>:call PhpDocSingle()<CR>i
-nnoremap <C-P> :call PhpDocSingle()<CR>
-vnoremap <C-P> :call PhpDocRange()<CR> 
+imap <C-P> <ESC>:call PhpDocSingle()<CR>i
+nmap <C-P> :call PhpDocSingle()<CR>
+vmap <C-P> :call PhpDocRange()<CR> 
 
 call project#rc("~/www")
 source ~/.vimprojects
+
+function! VimDeInitializeProject(...) abort
+    let cwd = getcwd()
+    let tagfilename = cwd . "/tags"
+    let cmd = "phpctags -R -f " . tagfilename
+    if !filereadable(tagfilename)
+        echo "Generating tags file"
+        let resp = system(cmd)
+        echo "Done"
+    endif
+endfunction
 
 let g:gutentags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
                             \ '*.phar', '*.ini', '*.rst', '*.md',
