@@ -1,5 +1,26 @@
-Project 'cph-art.dk7'
+Project 'cph-art.dk7' , 'cph-art.dk7'
 Callback 'cph-art.dk7' , 'VimDeInitializeProject'
 
-Project 'rumarket-shops.ru'
+Project 'rumarket-shops.ru' , 'rumarket-shops.ru'
 Callback 'rumarket-shops.ru' , 'VimDeInitializeProject'
+
+Project 'rumarket-shops.com'
+Callback 'rumarket-shops.com' , 'VimDeInitializeProject'
+
+Project 'old.culturewhisper.com' , 'old.culturewhisper.com'
+Callback 'old.culturewhisper.com' , 'VimDeInitializeProject'
+
+Project 'new.culturewhisper.com'
+Callback 'new.culturewhisper.com' , ['VimDeInitializeProject', 'VimDeInitializeDrupalProject']
+
+Project 'shop2.gzanders.com'
+Callback 'shop2.gzanders.com' , 'VimDeInitializeProject'
+
+Project 'bandiveronesi.it'
+Callback 'bandiveronesi.it' , 'VimDeInitializeProject'
+
+Project 'www.myluminette.com'
+Callback 'www.myluminette.com' , 'VimDeInitializeProject'
+
+Project 'agent.rumarket-shops.com'
+Callback 'agent.rumarket-shops.com' , 'VimDeInitializeProject'

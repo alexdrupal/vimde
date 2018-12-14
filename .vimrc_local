@@ -22,13 +22,12 @@ Plug 'airblade/vim-gitgutter'
 Plug 'stephpy/vim-php-cs-fixer'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'majutsushi/tagbar'
+Plug 'trevordmiller/nova-vim'
 Plug 'morhetz/gruvbox'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'altercation/vim-colors-solarized'
-Plug 'rakr/vim-one'
-Plug 'jacoborus/tender.vim'
-Plug 'gosukiwi/vim-atom-dark'
+Plug 'blueshirts/darcula'
+Plug 'ericbn/vim-solarized'
+Plug 'damage220/solas.vim'
+Plug 'vim-airline/vim-airline'
 
 call plug#end()
 
@@ -39,17 +38,10 @@ set ruler
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7" 
 
-
-" Enable syntax highlight
-syntax on
-
-if (has("termguicolors"))
- set termguicolors
-endif
+set background=dark
 
 " Set the color scheme
-" set background=light
-colorscheme tender
+colorscheme solas
 
 " Set font
 if has("gui_running")
@@ -107,17 +99,6 @@ set mousehide
 " Enable autoindent
 set autoindent
 
-let g:tagbar_type_php  = {
-  \ 'ctagstype' : 'php',
-  \ 'kinds'     : [
-      \ 'i:interfaces',
-      \ 'c:classes',
-      \ 'd:constant definitions',
-      \ 'f:functions',
-      \ 'j:javascript functions:1'
-    \ ]
-\ }
-
 if has("autocmd")
     "Drupal *.module and *.install files.
     augroup module
@@ -142,6 +123,9 @@ function! HookFunc()
   return "function " . f . "_"
 endfunction
 
+" Enable syntax highlight
+syntax on
+
 " allow to use backspace instead of x
 set backspace=indent,eol,start whichwrap+=<,>,[,]
 
@@ -149,9 +133,9 @@ set backspace=indent,eol,start whichwrap+=<,>,[,]
 set expandtab
 
 " Set tab width as 2 spaces
-set shiftwidth=2
-set softtabstop=2
-set tabstop=2
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
 
 " Set format for status line
 set statusline=%<%f%h%m%r\ %b\ %{&encoding}\ 0x\ \ %l,%c%V\ %P 
@@ -173,6 +157,8 @@ set sessionoptions=curdir,buffers,tabpages
 " Hotkeys
 "-------------------------
 "
+
+imap jj <Esc>
 
 " Space list pages when in normal mode
 nmap <Space> <PageDown>
@@ -205,9 +191,9 @@ vmap <F3> <esc>:copen<cr>
 imap <F3> <esc>:copen<cr>
 
 " F5 - show buffers
-nmap <F5> <Esc>:Buffers<cr>
-vmap <F5> <esc>:Buffers<cr>
-imap <F5> <esc><esc>:Buffers<cr>
+nmap <F5> <Esc>:BufExplorer<cr>
+vmap <F5> <esc>:BufExplorer<cr>
+imap <F5> <esc><esc>:BufExplorer<cr>
 
 " F7 - NERDTree
 nmap <silent> <F7> :NERDTreeToggle<CR>
@@ -215,9 +201,9 @@ vmap <silent> <F7> <esc>:NERDTreeToggle<CR>i
 imap <silent> <F7> <esc>:NERDTreeToggle<CR>i
 
 " F8 - marks browser
-map <F8> :Files<cr>
-vmap <F8> <esc>:Files<cr>
-imap <F8> <esc>:Files<cr>
+map <F8> :MarksBrowser<cr>
+vmap <F8> <esc>:MarksBrowser<cr>
+imap <F8> <esc>:MarksBrowser<cr>
 
 " F9 - make command
 map <F9> :make<cr>
@@ -229,10 +215,15 @@ map <F10> :bd<cr>
 vmap <F10> <esc>:bd<cr>
 imap <F10> <esc>:bd<cr>
 
-" F11 - show tagbar window
-map <F11> :TagbarToggle<cr>
-vmap <F11> <esc>:TagbarToggle<cr>
-imap <F11> <esc>:TagbarToggle<cr>
+" F11 - show taglist window
+map <F11> :TlistToggle<cr>
+vmap <F11> <esc>:TlistToggle<cr>
+imap <F11> <esc>:TlistToggle<cr>
+
+" F12 - show netrw
+map <F12> :Ex<cr>
+vmap <F12> <esc>:Ex<cr>i
+imap <F12> <esc>:Ex<cr>
 
 " < & > - indents blocks
 vmap < <gv
@@ -283,6 +274,12 @@ au FileType php set omnifunc=phpcomplete#CompletePHP
 let g:SessionMgr_AutoManage = 0
 let g:SessionMgr_DefaultName = "mysession"
 
+" Taglist settings
+let g:Tlist_Show_One_File = 1
+let g:Tlist_Use_Right_Window = 1
+let Tlist_Sort_Type = "name"
+let Tlist_WinWidth = 50
+
 " Complete options
 set completeopt-=preview
 set completeopt+=longest
@@ -293,30 +290,12 @@ let g:netrw_browse_split = 3
 
 " phpDocumentor
 " 
-imap <C-P> <ESC>:call PhpDocSingle()<CR>i
-nmap <C-P> :call PhpDocSingle()<CR>
-vmap <C-P> :call PhpDocRange()<CR> 
+inoremap <C-P> <ESC>:call PhpDocSingle()<CR>i
+nnoremap <C-P> :call PhpDocSingle()<CR>
+vnoremap <C-P> :call PhpDocRange()<CR> 
 
 call project#rc("~/www")
 source ~/.vimprojects
-
-function! VimDeInitializeProject(...) abort
-"    let cwd = getcwd()
-"    let tagfilename = cwd . "/tags"
-"    let cmd = "phpctags -R -f " . tagfilename
-"    echo tagfilename
-"    if !filereadable(tagfilename)
-"        echo "Generating tags file"
-"        let resp = system(cmd)
-"        echo "Done"
-"    else
-"        set tags=tagfilename
-"    endif
-endfunction
-
-function! VimDeInitializeDrupalProject(...) abort
-  let g:syntastic_php_phpcs_args="--standard=Drupal --extensions=php,module,inc,install,test,profile,theme"
-endfunction
 
 let g:gutentags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
                             \ '*.phar', '*.ini', '*.rst', '*.md',

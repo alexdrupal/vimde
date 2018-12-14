@@ -1,0 +1,6 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =4
+let g:netrw_dirhist_1='/stuff/hp510/stuff/projects/private/www.myluminette.com'
+let g:netrw_dirhist_2='/stuff/hp510/stuff/projects/private/www.myluminette.com/app'
+let g:netrw_dirhist_3='/stuff/hp510/stuff/projects/private/questionbot/app'
+let g:netrw_dirhist_4='/stuff/hp510/stuff/projects/private/questionbot'
