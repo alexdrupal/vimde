@@ -1,17 +1,23 @@
 set nocompatible
 
-set t_Co=256
+" set t_Co=256
 
+"
+"-------------------------
+" Plugins
+"-------------------------
+"
 call plug#begin('~/.vim/plugged')
 
 Plug 'scrooloose/nerdtree'
 Plug 'sheerun/vim-polyglot'
 Plug 'joshdick/onedark.vim'
+Plug 'dense-analysis/ale'
 Plug 'itchyny/lightline.vim'
+Plug 'maximbaz/lightline-ale'
 Plug 'amiorin/vim-project'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
-Plug 'scrooloose/syntastic'
 Plug 'mattn/emmet-vim'
 Plug 'sirver/ultisnips'
 Plug 'honza/vim-snippets'
@@ -23,14 +29,18 @@ Plug 'stephpy/vim-php-cs-fixer'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'majutsushi/tagbar'
-Plug 'morhetz/gruvbox'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'altercation/vim-colors-solarized'
-Plug 'rakr/vim-one'
-Plug 'jacoborus/tender.vim'
-Plug 'gosukiwi/vim-atom-dark'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'shawncplus/phpcomplete.vim'
+Plug 'Rican7/php-doc-modded'
+Plug 'ap/vim-css-color'
 
 call plug#end()
+
+"
+"-------------------------
+" Settings
+"-------------------------
+"
 
 "Show cursor position everytime
 set ruler		
@@ -38,7 +48,6 @@ set ruler
 " Change cursor type (works in Konsole)
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7" 
-
 
 " Enable syntax highlight
 syntax on
@@ -48,8 +57,7 @@ if (has("termguicolors"))
 endif
 
 " Set the color scheme
-" set background=light
-colorscheme tender
+colorscheme onedark
 
 " Set font
 if has("gui_running")
@@ -103,31 +111,179 @@ set ch=1
 " Hide mouse when typing
 set mousehide
 
-
 " Enable autoindent
 set autoindent
+
+" allow to use backspace instead of x
+set backspace=indent,eol,start whichwrap+=<,>,[,]
+
+" Expand tabs as spaces
+set expandtab
+
+" Set tab width as 4 spaces
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+
+" Set format for status line
+set statusline=%<%f%h%m%r\ %b\ %{&encoding}\ 0x\ \ %l,%c%V\ %P 
+set laststatus=2
+
+if has('gui_running')
+    set listchars=tab:▶\ ,trail:·,extends:\#,nbsp:.
+else
+    set listchars=tab:>.,trail:.,extends:\#,nbsp:.
+endif
+
+" Enable smart indent
+set smartindent
+
+" Fix <Enter> for comment
+set fo+=cr
+
+" Set session options
+set sessionoptions=curdir,buffers,tabpages
+
+set complete=""
+
+" Set complete from current buffer
+set complete+=.
+set complete+=k
+
+" Set complete from other open buffers
+set complete+=b
+
+" Set complete from tags
+set complete+=t
+
+" Complete options
+set completeopt+=longest
+
+" Enable filetype plugin
+filetype plugin on
+au BufRead,BufNewFile *.phps set filetype=php
+au BufRead,BufNewFile *.phtml set filetype=php
+" au FileType php set omnifunc=phpcomplete#CompletePHP
+
+" SessionMgr settings
+let g:SessionMgr_AutoManage = 0
+let g:SessionMgr_DefaultName = "mysession"
+
+"
+"-------------------------
+" Projects settings
+"-------------------------
+"
+" set root folder for projects to $HOME/www
+call project#rc("~/www")
+
+" Load project list from .vimprojects
+source ~/.vimprojects
+
+function! VimDeInitializeProject(...) abort
+endfunction
+
+function! VimDeInitializeDrupalProject(...) abort
+endfunction
+
+"
+"-------------------------
+" Netrw
+"-------------------------
+"
+let g:netrw_browse_split = 3
+
+"
+"-------------------------
+" Ultisnips
+"-------------------------
+"
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+"
+"-------------------------
+" Ale settings
+"-------------------------
+"
+
+let g:ale_loclist_msg_format='%linter% | %s'
+let g:ale_sign_warning = '▲'
+let g:ale_sign_error = '✗'
+highlight link ALEWarningSign WarningMsg
+highlight link ALEErrorSign Error
+
+let g:ale_linters_explicit = 1
+let g:ale_history_log_output = 1
+let g:ale_linters = {
+    \ 'php': ['php', 'phpstan', 'phpcs'],
+\}
+
+" Set the default code style to Symfony
+let g:ale_php_phpcs_standard = 'Symfony'
 
 let g:tagbar_type_php  = {
   \ 'ctagstype' : 'php',
   \ 'kinds'     : [
       \ 'i:interfaces',
       \ 'c:classes',
-      \ 'd:constant definitions',
-      \ 'f:functions',
-      \ 'j:javascript functions:1'
+      \ 'f:functions'
     \ ]
 \ }
 
+"
+"-------------------------
+" Light line
+"-------------------------
+"
+let g:lightline = {
+    \ 'colorscheme': 'onedark',
+    \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'relativepath', 'modified' ] ],
+      \   'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype'], [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]],
+    \ },
+    \ 'component_function': {
+      \   'gitbranch': 'VimDEBranch',
+    \ },
+    \ 'component_expand': {
+        \  'linter_checking': 'lightline#ale#checking',
+        \  'linter_warnings': 'lightline#ale#warnings',
+        \  'linter_errors': 'lightline#ale#errors',
+        \  'linter_ok': 'lightline#ale#ok',
+    \ },
+    \ 'component_type': {
+        \  'linter_checking': 'left',
+        \  'linter_warnings': 'warning',
+        \  'linter_errors': 'error',
+        \  'linter_ok': 'left',
+    \ },
+\ }
+
+function! VimDEBranch()
+    if exists('*fugitive#head')
+        let branch = fugitive#head()
+            return branch !=# '' ? 'Git branch: '.branch : ''
+        endif
+    return ''
+endfunction
+
+"
+"-------------------------
+" Drupal
+"-------------------------
+"
 if has("autocmd")
     "Drupal *.module and *.install files.
     augroup module
         autocmd BufRead,BufNewFile *.module set filetype=php
         autocmd BufRead,BufNewFile *.install set filetype=php
         autocmd BufRead,BufNewFile *.inc set filetype=php
-	autocmd BufRead,BufNewFile *.engine set filetype=php
-	autocmd BufRead,BufNewFile *.theme set filetype=php
-	autocmd BufRead,BufNewFile *.profile set filetype=php
-	autocmd BufRead,BufNewFile *.test set filetype=php
+        autocmd BufRead,BufNewFile *.engine set filetype=php
+        autocmd BufRead,BufNewFile *.theme set filetype=php
+        autocmd BufRead,BufNewFile *.profile set filetype=php
+        autocmd BufRead,BufNewFile *.test set filetype=php
     augroup END
     augroup inf
         autocmd BufRead,BufNewFile *.info set filetype=txt
@@ -142,31 +298,30 @@ function! HookFunc()
   return "function " . f . "_"
 endfunction
 
-" allow to use backspace instead of x
-set backspace=indent,eol,start whichwrap+=<,>,[,]
+"
+"-------------------------
+" Gutentags
+"-------------------------
+"
+let g:gutentags_ctags_extra_args=["--PHP-kinds=+cdfint-av"]
 
-" Expand tabs as spaces
-set expandtab
-
-" Set tab width as 2 spaces
-set shiftwidth=2
-set softtabstop=2
-set tabstop=2
-
-" Set format for status line
-set statusline=%<%f%h%m%r\ %b\ %{&encoding}\ 0x\ \ %l,%c%V\ %P 
-set laststatus=2
-
-
-" Enable smart indent
-set smartindent
+let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
+                            \ '*.phar', '*.ini', '*.rst', '*.md',
+                            \ '*vendor/*/test*', '*vendor/*/Test*',
+                            \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
+                            \ '*var/cache*', '*var/log*']
 
 "
-" Fix <Enter> for comment
-set fo+=cr
+"-------------------------
+" Ack
+"-------------------------
+"
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
-" Set session options
-set sessionoptions=curdir,buffers,tabpages
+set grepprg=ag
+let g:grep_cmd_opts = '--line-numbers --noheading'
 
 "
 "-------------------------
@@ -257,77 +412,13 @@ map <C-Q> <Esc>:qa<cr>
 " C-T - next buffer
 map <C-tab> <Esc>:bnext<cr>
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-set complete=""
-
-" Set complete from current buffer
-set complete+=.
-set complete+=k
-
-" Set complete from other open buffers
-set complete+=b
-
-" Set complete from tags
-set complete+=t
-
-" Enable filetype plugin
-filetype plugin on
-au BufRead,BufNewFile *.phps set filetype=php
-au BufRead,BufNewFile *.phtml set filetype=php
-au FileType php set omnifunc=phpcomplete#CompletePHP
-
-" SessionMgr settings
-let g:SessionMgr_AutoManage = 0
-let g:SessionMgr_DefaultName = "mysession"
-
-" Complete options
-set completeopt-=preview
-set completeopt+=longest
-set mps-=[:]
-
-" Netrw settings
-let g:netrw_browse_split = 3
 
 " phpDocumentor
-" 
+"
+
+let g:pdv_cfg_annotation_Package = 0
 imap <C-P> <ESC>:call PhpDocSingle()<CR>i
 nmap <C-P> :call PhpDocSingle()<CR>
 vmap <C-P> :call PhpDocRange()<CR> 
 
-call project#rc("~/www")
-source ~/.vimprojects
-
-function! VimDeInitializeProject(...) abort
-"    let cwd = getcwd()
-"    let tagfilename = cwd . "/tags"
-"    let cmd = "phpctags -R -f " . tagfilename
-"    echo tagfilename
-"    if !filereadable(tagfilename)
-"        echo "Generating tags file"
-"        let resp = system(cmd)
-"        echo "Done"
-"    else
-"        set tags=tagfilename
-"    endif
-endfunction
-
-function! VimDeInitializeDrupalProject(...) abort
-  let g:syntastic_php_phpcs_args="--standard=Drupal --extensions=php,module,inc,install,test,profile,theme"
-endfunction
-
-let g:gutentags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
-                            \ '*.phar', '*.ini', '*.rst', '*.md',
-                            \ '*vendor/*/test*', '*vendor/*/Test*',
-                            \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
-                            \ '*var/cache*', '*var/log*']
-let g:gutentags_cache_dir = '~/.vim/gutentags'
-
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
-
-set grepprg=ag
-let g:grep_cmd_opts = '--line-numbers --noheading'
+source ~/.vimrc.local

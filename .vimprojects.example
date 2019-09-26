@@ -1,0 +1,4 @@
+
+" See the page https://github.com/amiorin/vim-project
+" for the available settings for Project setup
+Project 'www.site.com' , 'www.site.com'
