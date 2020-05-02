@@ -1,18 +1,9 @@
 TODO:
 
-* add tags file generation for project. NOTE: added gutentags and few settings for it. Need to fix tag generation 
-  for whole project. Now works for individual file only . enable trace for gutentags - the root cause is that phpctags does not support 
-    reading settings from file. Gutentags try to supply options as --options. Also phpctags fails to generate tag file if one of the files in project has PHP error
-* add best php autocomplete:
-    * https://robertbasic.com/blog/current-vim-setup-for-php-development/
-    * http://web-techno.net/vim-php-ide/
 * add refactoring plugins for PHP
-* add zencoding
-* add surround
-* setup autocomplete keys for basic autocompletion: words from current buffers, from tags
+* read surround documentation and start using it
 * extend README and explain how to setup basic directory for your projects
 * memoize the top5 usefull refactoring methods(probably add them into README) : https://github.com/adoy/vim-php-refactoring-toolbox
-* install & configure easytags plugin.
 * installed phpcs, phpstan and something else via composer global install... check that and add to readme
 * make sure that .vimrc is properly formatted and documented
 * installed tig

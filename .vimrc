@@ -1,40 +1,147 @@
 set nocompatible
 
-" set t_Co=256
-
 "
 "-------------------------
 " Plugins
 "-------------------------
 "
+
 call plug#begin('~/.vim/plugged')
 
+" IDE like stuff 
+Plug 'amiorin/vim-project' " The main plugin for VIMDe
 Plug 'scrooloose/nerdtree'
-Plug 'sheerun/vim-polyglot'
-Plug 'joshdick/onedark.vim'
-Plug 'dense-analysis/ale'
 Plug 'itchyny/lightline.vim'
-Plug 'maximbaz/lightline-ale'
-Plug 'amiorin/vim-project'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
-Plug 'mattn/emmet-vim'
-Plug 'sirver/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'StanAngeloff/php.vim'
-Plug 'mileszs/ack.vim'
-Plug 'skwp/greplace.vim'
-Plug 'airblade/vim-gitgutter'
-Plug 'stephpy/vim-php-cs-fixer'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
 Plug 'majutsushi/tagbar'
 Plug 'ludovicchabant/vim-gutentags'
-Plug 'shawncplus/phpcomplete.vim'
-Plug 'Rican7/php-doc-modded'
+
+" Snippets
+Plug 'sirver/ultisnips'
+Plug 'honza/vim-snippets'
+
+" Colors
+Plug 'joshdick/onedark.vim'
+Plug 'morhetz/gruvbox'
+" Plug 'blueshirts/darcula'
+" Plug 'isobit/vim-darcula-colors'
+Plug 'alexdrupal/vim-darcula-colors'
+Plug 'rainglow/vim'
+Plug 'w0ng/vim-hybrid'
+Plug 'chriskempson/base16-vim'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'arzg/vim-colors-xcode'
+Plug 'vim-scripts/SyntaxAttr.vim'
+Plug 'lifepillar/vim-solarized8'
+
+" Git
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+
+" Search
+Plug 'skwp/greplace.vim'
+Plug 'mileszs/ack.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+" Utils
+Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-surround'
+Plug 'ap/vim-buftabline'
+Plug 'jiangmiao/auto-pairs'
+Plug 'Shougo/echodoc.vim'
+Plug 'easymotion/vim-easymotion'
+
+" HTML, CSS
+Plug 'mattn/emmet-vim'
 Plug 'ap/vim-css-color'
 
+" PHP
+Plug 'StanAngeloff/php.vim'
+Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install --no-dev -o'}
+Plug 'qbbr/vim-symfony'
+Plug 'Rican7/php-doc-modded'
+
+" Autocomplete
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'kristijanhusak/deoplete-phpactor'
+
+" Python
+Plug 'deoplete-plugins/deoplete-jedi'
+
+" Syntax check (ALE)
+Plug 'dense-analysis/ale'
+Plug 'maximbaz/lightline-ale'
+
+" TODO Check if it is possible to use lvht with multiline constructions
+" Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
 call plug#end()
+
+"
+"-------------------------
+" Functions
+"-------------------------
+"
+"
+
+" TODO: pull logic from phpcomplete to get real function name
+" function MagentoTagFunc()
+"    echom "Hello from Magento Tags"
+"    let current_term = expand('<cword>')
+"    echom current_term
+"    execute "tag " . current_term
+" endfunction
+" map <C-]> :call MagentoTagFunc()<CR>
+
+function! VimDeInitializeComposerProject(...) abort
+    nmap <C-]> :PhpactorGotoDefinition<CR>
+endfunction
+
+function! VimDeInitializeDrupalProject(...) abort
+endfunction
+
+function! VimDeInitializePimcoreProject(...) abort
+    let g:ale_linters = {
+        \ 'php': ['php', 'phpcs', 'phpstan'],
+    \}
+
+    let g:ale_fixers = {
+        \ 'php': ['phpcbf'],
+    \}
+
+    " Set the default code style to Divante for PIMCore5
+    let g:ale_php_phpcs_standard = expand('~/.config/composer/vendor/divante-ltd/pimcore-coding-standards/Standards/Pimcore5/ruleset.xml')
+    let g:ale_php_phpcbf_standard = expand('~/.config/composer/vendor/divante-ltd/pimcore-coding-standards/Standards/Pimcore5/ruleset.xml')
+endfunction
+
+function! VimDeInitializeMagento1Project(...) abort
+    let g:ale_linters = {
+        \ 'php': ['php'],
+    \}
+endfunction
+
+function! VimDeInitializeMagento2Project(...) abort
+    let g:ale_linters = {
+        \ 'php': ['php', 'phpcs', 'phpstan'],
+    \}
+
+    let g:ale_fixers = {
+        \ 'php': ['phpcbf'],
+    \}
+
+    " Set to Magento2 coding standard
+    let g:ale_php_phpcs_standard = expand('~/.config/composer/vendor/magento/magento-coding-standard/Magento2/ruleset.xml')
+    let g:ale_php_phpcbf_standard = expand('~/.config/composer/vendor/magento/magento-coding-standard/Magento2/ruleset.xml')
+endfunction
+
+function! VimDEBranch()
+    if exists('*fugitive#head')
+        let branch = fugitive#head()
+            return branch !=# '' ? 'Git branch: '.branch : ''
+        endif
+    return ''
+endfunction
 
 "
 "-------------------------
@@ -43,9 +150,10 @@ call plug#end()
 "
 
 "Show cursor position everytime
-set ruler		
+set ruler
+set relativenumber
 
-" Change cursor type (works in Konsole)
+" Change cursor type (works in Konsole and GVIM)
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7" 
 
@@ -56,15 +164,32 @@ if (has("termguicolors"))
  set termguicolors
 endif
 
-" Set the color scheme
-colorscheme onedark
 
 " Set font
+set guifont=Ubuntu\ Mono\ 12
 if has("gui_running")
   if has("gui_gtk2")
-    set guifont=Droid\ Sans\ Mono\ 13
+    set guifont=Ubuntu\ Mono\ 12
   endif
 endif
+
+" Set the color scheme
+" set background=light
+" colorscheme onedark
+
+" let ayucolor="light"  " for light version of theme
+" let ayucolor="mirage" " for mirage version of theme
+" let ayucolor="dark"   " for dark version of theme
+" colorscheme ayu
+" colorscheme super-light
+" colorscheme base16-default-dark
+" colorscheme solarized8_high
+colorscheme gruvbox
+" colorscheme darcula
+" let g:gruvbox_contrast_light = 'hard'
+" set background=light
+" colorscheme PaperColor
+" colorscheme xcodelighthc
 
 " Show commands in status bar
 set showcmd		
@@ -76,14 +201,11 @@ set nowrap
 set nu
 
 " Set folding method
+set nofoldenable
 set foldmethod=indent
 
 " Search during type
 set incsearch
-
-" Switch off search results highlight
-set hlsearch
-set cursorline
 
 set scrolljump=7
 set scrolloff=7
@@ -158,12 +280,11 @@ set complete+=t
 
 " Complete options
 set completeopt+=longest
+set completeopt+=preview
 
 " Enable filetype plugin
 filetype plugin on
-au BufRead,BufNewFile *.phps set filetype=php
-au BufRead,BufNewFile *.phtml set filetype=php
-" au FileType php set omnifunc=phpcomplete#CompletePHP
+
 
 " SessionMgr settings
 let g:SessionMgr_AutoManage = 0
@@ -174,69 +295,21 @@ let g:SessionMgr_DefaultName = "mysession"
 " Projects settings
 "-------------------------
 "
+
 " set root folder for projects to $HOME/www
 call project#rc("~/www")
 
 " Load project list from .vimprojects
-source ~/.vimprojects
-
-function! VimDeInitializeProject(...) abort
-endfunction
-
-function! VimDeInitializeDrupalProject(...) abort
-endfunction
-
-"
-"-------------------------
-" Netrw
-"-------------------------
-"
-let g:netrw_browse_split = 3
-
-"
-"-------------------------
-" Ultisnips
-"-------------------------
-"
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-"
-"-------------------------
-" Ale settings
-"-------------------------
-"
-
-let g:ale_loclist_msg_format='%linter% | %s'
-let g:ale_sign_warning = '▲'
-let g:ale_sign_error = '✗'
-highlight link ALEWarningSign WarningMsg
-highlight link ALEErrorSign Error
-
-let g:ale_linters_explicit = 1
-let g:ale_history_log_output = 1
-let g:ale_linters = {
-    \ 'php': ['php', 'phpstan', 'phpcs'],
-\}
-
-" Set the default code style to Symfony
-let g:ale_php_phpcs_standard = 'Symfony'
-
-let g:tagbar_type_php  = {
-  \ 'ctagstype' : 'php',
-  \ 'kinds'     : [
-      \ 'i:interfaces',
-      \ 'c:classes',
-      \ 'f:functions'
-    \ ]
-\ }
+if filereadable($HOME . "/.vimprojects")
+    source $HOME/.vimprojects
+endif
 
 "
 "-------------------------
 " Light line
 "-------------------------
 "
+
 let g:lightline = {
     \ 'colorscheme': 'onedark',
     \ 'active': {
@@ -261,19 +334,111 @@ let g:lightline = {
     \ },
 \ }
 
-function! VimDEBranch()
-    if exists('*fugitive#head')
-        let branch = fugitive#head()
-            return branch !=# '' ? 'Git branch: '.branch : ''
-        endif
-    return ''
-endfunction
+"
+"-------------------------
+" Tagbar
+"-------------------------
+"
+
+let g:tagbar_type_php = {
+    \ 'kinds' : [
+        \ 'i:interfaces',
+        \ 'c:classes',
+        \ 'd:constant definitions:0:0',
+        \ 'f:functions',
+    \ ],
+\ }
+
+"
+"-------------------------
+" Gutentags
+"-------------------------
+"
+
+let g:gutentags_ctags_extra_args=["--PHP-kinds=+cdfint-av"]
+let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
+                            \ '*.phar', '*.ini', '*.rst', '*.md',
+                            \ '*vendor/*/test*', '*vendor/*/Test*',
+                            \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
+                            \ '*var/cache*', '*var/log*']
+
+"
+"-------------------------
+" Ultisnips
+"-------------------------
+"
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+"
+"-------------------------
+" Ale settings
+"-------------------------
+"
+
+let g:ale_loclist_msg_format='%linter% | %s'
+let g:ale_sign_warning = '▲'
+let g:ale_sign_error = '✗'
+highlight link ALEWarningSign WarningMsg
+highlight link ALEErrorSign Error
+
+let g:ale_linters_explicit = 1
+let g:ale_history_log_output = 1
+let g:ale_php_phpstan_executable = expand('~/.config/composer/vendor/bin/phpstan')
+let g:ale_php_phpcbf_executable = expand('~/.config/composer/vendor/bin/phpcbf')
+let g:ale_php_phpcs_executable = expand('~/.config/composer/vendor/bin/phpcs')
+
+"
+"-------------------------
+" Ack
+"-------------------------
+"
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+set grepprg=ag
+let g:grep_cmd_opts = '--line-numbers --noheading'
+
+"
+"-------------------------
+" Deoplete
+"-------------------------
+"
+
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#source('_', 'max_menu_width', 150)
+
+"
+"-------------------------
+" Echodoc
+"-------------------------
+"
+
+set cmdheight=2
+let g:echodoc_enable_at_startup = 1
+set noshowmode
+let g:echodoc#type = 'popup'
+
+"
+"-------------------------
+" PHP 
+"-------------------------
+"
+
+au BufRead,BufNewFile *.phps set filetype=php
+au BufRead,BufNewFile *.phtml set filetype=php
+autocmd FileType php setlocal omnifunc=phpactor#Complete
 
 "
 "-------------------------
 " Drupal
 "-------------------------
 "
+
 if has("autocmd")
     "Drupal *.module and *.install files.
     augroup module
@@ -300,34 +465,13 @@ endfunction
 
 "
 "-------------------------
-" Gutentags
-"-------------------------
-"
-let g:gutentags_ctags_extra_args=["--PHP-kinds=+cdfint-av"]
-
-let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
-                            \ '*.phar', '*.ini', '*.rst', '*.md',
-                            \ '*vendor/*/test*', '*vendor/*/Test*',
-                            \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
-                            \ '*var/cache*', '*var/log*']
-
-"
-"-------------------------
-" Ack
-"-------------------------
-"
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
-
-set grepprg=ag
-let g:grep_cmd_opts = '--line-numbers --noheading'
-
-"
-"-------------------------
 " Hotkeys
 "-------------------------
 "
+
+let mapleader = ';'
+
+imap kj <esc>
 
 " Space list pages when in normal mode
 nmap <Space> <PageDown>
@@ -342,17 +486,13 @@ imap <C-V> <esc>"+gPi
 " Force shift-insert to work as in Xterm
 map <S-Insert> <MiddleMouse>
 
-" C-y - Delete current line
-nmap <C-y> dd
-imap <C-y> <esc>ddi
-
 " C-d - Duplicate current line
 imap <C-d> <esc>yypi
 
-" F2 - quick save
-nnoremap <F2> :w<cr>
-vmap <F2> <esc>:w<cr>i
-imap <F2> <esc>:w<cr>i
+" w;  - quick save
+nnoremap <leader>w :w<cr>
+vmap <leader>w <esc>:w<cr>i
+imap <leader>w <esc>:w<cr>i
 
 " F3 - show errors
 nmap <F3> :copen<cr>
@@ -369,42 +509,22 @@ nmap <silent> <F7> :NERDTreeToggle<CR>
 vmap <silent> <F7> <esc>:NERDTreeToggle<CR>i
 imap <silent> <F7> <esc>:NERDTreeToggle<CR>i
 
-" F8 - marks browser
-map <F8> :Files<cr>
-vmap <F8> <esc>:Files<cr>
-imap <F8> <esc>:Files<cr>
-
-" F9 - make command
-map <F9> :make<cr>
-vmap <F9> <esc>:make<cr>i
-imap <F9> <esc>:make<cr>i
-
 " F10 - buffer delete
 map <F10> :bd<cr>
 vmap <F10> <esc>:bd<cr>
 imap <F10> <esc>:bd<cr>
 
 " F11 - show tagbar window
-map <F11> :TagbarToggle<cr>
-vmap <F11> <esc>:TagbarToggle<cr>
-imap <F11> <esc>:TagbarToggle<cr>
+map <leader>tb :TagbarToggle<cr>
+vmap <leader>tb <esc>:TagbarToggle<cr>
+imap <leader>tb <esc>:TagbarToggle<cr>
 
 " < & > - indents blocks
-vmap < <gv
-vmap > >gv
+vmap <s-tab> <gv
+vmap <tab> >gv
 
 " Disable replace mode
 imap >Ins> <Esc>i
-
-
-" Add ] for [
-imap [ []<LEFT>
-
-" Same for {
-imap {<CR> {<CR>}<Esc>O
-
-" Same for (
-imap (<CR> (<CR>)<Esc>O
 
 " С-q - quite Vim 
 map <C-Q> <Esc>:qa<cr>
@@ -412,13 +532,23 @@ map <C-Q> <Esc>:qa<cr>
 " C-T - next buffer
 map <C-tab> <Esc>:bnext<cr>
 
+" Show highlight group for character under cursor
+map <leader>a :call SyntaxAttr()<CR>
 
-" phpDocumentor
-"
+" Open FZF file search dialog
+map <leader>fo :Files<cr>
+" nmap <leader>f :Files<CR>
 
+" Fix formatting using ALE for current buffer
+map <leader>ff :ALEFix<cr>
+
+" Terminate current string with ; in normal mode (PHP)
+nmap ;; $a;<esc>
+
+"" phpDocumentor
 let g:pdv_cfg_annotation_Package = 0
-imap <C-P> <ESC>:call PhpDocSingle()<CR>i
-nmap <C-P> :call PhpDocSingle()<CR>
-vmap <C-P> :call PhpDocRange()<CR> 
+imap <A-P> <ESC>:call PhpDocSingle()<CR>i
+nmap <A-P> :call PhpDocSingle()<CR>
+vmap <A-P> :call PhpDocRange()<CR> 
 
 source ~/.vimrc.local
