@@ -21,17 +21,7 @@ Plug 'honza/vim-snippets'
 
 " Colors
 Plug 'joshdick/onedark.vim'
-Plug 'morhetz/gruvbox'
-" Plug 'blueshirts/darcula'
-" Plug 'isobit/vim-darcula-colors'
 Plug 'alexdrupal/vim-darcula-colors'
-Plug 'rainglow/vim'
-Plug 'w0ng/vim-hybrid'
-Plug 'chriskempson/base16-vim'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'arzg/vim-colors-xcode'
-Plug 'vim-scripts/SyntaxAttr.vim'
-Plug 'lifepillar/vim-solarized8'
 
 " Git
 Plug 'airblade/vim-gitgutter'
@@ -50,6 +40,7 @@ Plug 'ap/vim-buftabline'
 Plug 'jiangmiao/auto-pairs'
 Plug 'Shougo/echodoc.vim'
 Plug 'easymotion/vim-easymotion'
+Plug 'tpope/vim-commentary'
 
 " HTML, CSS
 Plug 'mattn/emmet-vim'
@@ -95,6 +86,8 @@ call plug#end()
 " map <C-]> :call MagentoTagFunc()<CR>
 
 function! VimDeInitializeComposerProject(...) abort
+    " we try to use PhpactorGotoDefinition function instead of tags for
+    " composer projects
     nmap <C-]> :PhpactorGotoDefinition<CR>
 endfunction
 
@@ -153,6 +146,9 @@ endfunction
 set ruler
 set relativenumber
 
+" Display vertical line at 80 column
+set colorcolumn=80
+ 
 " Change cursor type (works in Konsole and GVIM)
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7" 
@@ -174,22 +170,8 @@ if has("gui_running")
 endif
 
 " Set the color scheme
-" set background=light
-" colorscheme onedark
-
-" let ayucolor="light"  " for light version of theme
-" let ayucolor="mirage" " for mirage version of theme
-" let ayucolor="dark"   " for dark version of theme
-" colorscheme ayu
-" colorscheme super-light
-" colorscheme base16-default-dark
-" colorscheme solarized8_high
-colorscheme gruvbox
-" colorscheme darcula
-" let g:gruvbox_contrast_light = 'hard'
-" set background=light
-" colorscheme PaperColor
-" colorscheme xcodelighthc
+set background=dark
+colorscheme darcula
 
 " Show commands in status bar
 set showcmd		
@@ -203,6 +185,7 @@ set nu
 " Set folding method
 set nofoldenable
 set foldmethod=indent
+set splitbelow
 
 " Search during type
 set incsearch
@@ -545,10 +528,13 @@ map <leader>ff :ALEFix<cr>
 " Terminate current string with ; in normal mode (PHP)
 nmap ;; $a;<esc>
 
-"" phpDocumentor
+" phpDocumentor
 let g:pdv_cfg_annotation_Package = 0
 imap <A-P> <ESC>:call PhpDocSingle()<CR>i
 nmap <A-P> :call PhpDocSingle()<CR>
 vmap <A-P> :call PhpDocRange()<CR> 
+
+" Git
+nmap <leader>gs :15G<CR>
 
 source ~/.vimrc.local
