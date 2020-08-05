@@ -9,3 +9,6 @@ The simple VIM distribution for PHP projects
 * install Ag
 * install FZF
 * install phpctags
+
+## Documentation
+[Keys](docs/index.md)
