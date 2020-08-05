@@ -41,6 +41,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'Shougo/echodoc.vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-commentary'
+Plug 'godlygeek/tabular'
 
 " HTML, CSS
 Plug 'mattn/emmet-vim'
@@ -65,8 +66,6 @@ Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
 
-" TODO Check if it is possible to use lvht with multiline constructions
-" Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
 call plug#end()
 
 "
