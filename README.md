@@ -7,7 +7,6 @@ Darcula theme (phpstorm darcula colors)             | GIT support
 :----------------------------------:|:---------------------------------:
 ![](docs/images/preview-color.png)  |  ![](docs/images/preview-git.png)
 Filesystem tree view (NERDTree)     | Autocomplete
-:----------------------------------:|:---------------------------------:
 ![](docs/images/preview-nerdtree.png) | ![](docs/images/preview-autocomplete.png)
 
 ## Install
