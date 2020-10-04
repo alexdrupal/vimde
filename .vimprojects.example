@@ -1,4 +1,19 @@
 
 " See the page https://github.com/amiorin/vim-project
 " for the available settings for Project setup
+" VIMDE by default looks for projects inside www folder in your homedir
+
+" Example for Magento 1 project
 Project 'www.site.com' , 'www.site.com'
+Callback 'www.site.com' , ['VimDeInitializeMagento1Project']
+
+" Example for PIMCore project
+Project 'www.site2.com' , 'www.site2.com'
+Callback 'www.site2.com' , ['VimDeInitializeComposerProject', 'VimDeInitializePimcoreProject']
+
+" Example for Magento 2
+Project 'www.site3.com' , 'www.site3.com'
+Callback 'www.site3.com' , ['VimDeInitializeComposerProject', 'VimDeInitializeMagento2Project']
+
+" Example for project located outside of your normal projects folder
+Project '~/stuff/projects/public/vimde', 'VimDE'

@@ -26,6 +26,7 @@ Plug 'alexdrupal/vim-darcula-colors'
 " Git
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
+Plug 'stsewd/fzf-checkout.vim'
 
 " Search
 Plug 'skwp/greplace.vim'
@@ -54,7 +55,7 @@ Plug 'qbbr/vim-symfony'
 Plug 'Rican7/php-doc-modded'
 
 " Autocomplete
-Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim', {'commit': '7535773f9dba82bd8077a2319b7aa8b275dde25a'}
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'kristijanhusak/deoplete-phpactor'
@@ -88,6 +89,10 @@ function! VimDeInitializeComposerProject(...) abort
     " we try to use PhpactorGotoDefinition function instead of tags for
     " composer projects
     nmap <C-]> :PhpactorGotoDefinition<CR>
+    let g:ale_linters = {
+        \ 'php': ['php', 'phpstan'],
+    \}
+
 endfunction
 
 function! VimDeInitializeDrupalProject(...) abort
@@ -161,10 +166,10 @@ endif
 
 
 " Set font
-set guifont=Ubuntu\ Mono\ 12
+set guifont=Ubuntu\ Mono\ 16
 if has("gui_running")
   if has("gui_gtk2")
-    set guifont=Ubuntu\ Mono\ 12
+    set guifont=Ubuntu\ Mono\ 16
   endif
 endif
 
@@ -535,5 +540,7 @@ vmap <A-P> :call PhpDocRange()<CR>
 
 " Git
 nmap <leader>gs :15G<CR>
+nmap <leader>gl :Glog<CR>
+nmap <leader>gb :GBranches<CR>
 
 source ~/.vimrc.local
