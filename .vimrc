@@ -27,6 +27,7 @@ Plug 'alexdrupal/vim-darcula-colors'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'stsewd/fzf-checkout.vim'
+Plug 'shumphrey/fugitive-gitlab.vim'
 
 " Search
 Plug 'skwp/greplace.vim'
@@ -48,17 +49,23 @@ Plug 'godlygeek/tabular'
 Plug 'mattn/emmet-vim'
 Plug 'ap/vim-css-color'
 
+" Javascript
+Plug 'carlitux/deoplete-ternjs'
+Plug 'ternjs/tern_for_vim'
+
 " PHP
 Plug 'StanAngeloff/php.vim'
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install --no-dev -o'}
 Plug 'qbbr/vim-symfony'
 Plug 'Rican7/php-doc-modded'
 
+" Dart
+Plug 'dart-lang/dart-vim-plugin'
+
 " Autocomplete
 Plug 'Shougo/deoplete.nvim', {'commit': '7535773f9dba82bd8077a2319b7aa8b275dde25a'}
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
-Plug 'kristijanhusak/deoplete-phpactor'
 
 " Python
 Plug 'deoplete-plugins/deoplete-jedi'
@@ -66,6 +73,9 @@ Plug 'deoplete-plugins/deoplete-jedi'
 " Syntax check (ALE)
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
+
+Plug 'xolox/vim-notes'
+Plug 'xolox/vim-misc'
 
 call plug#end()
 
@@ -118,6 +128,9 @@ function! VimDeInitializeMagento1Project(...) abort
     \}
 endfunction
 
+function! VimDeInitializeJavascriptProject(...) abort
+endfunction
+
 function! VimDeInitializeMagento2Project(...) abort
     let g:ale_linters = {
         \ 'php': ['php', 'phpcs', 'phpstan'],
@@ -151,7 +164,7 @@ set ruler
 set relativenumber
 
 " Display vertical line at 80 column
-set colorcolumn=80
+set colorcolumn=120
  
 " Change cursor type (works in Konsole and GVIM)
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -166,10 +179,10 @@ endif
 
 
 " Set font
-set guifont=Ubuntu\ Mono\ 16
+set guifont=Monospace\ 12
 if has("gui_running")
   if has("gui_gtk2")
-    set guifont=Ubuntu\ Mono\ 16
+    set guifont=Monospace\ 12
   endif
 endif
 
@@ -277,7 +290,9 @@ filetype plugin on
 let g:SessionMgr_AutoManage = 0
 let g:SessionMgr_DefaultName = "mysession"
 
-"
+" Notes
+let g:notes_directories = ['~/Documents/Notes']
+
 "-------------------------
 " Projects settings
 "-------------------------
@@ -331,7 +346,7 @@ let g:tagbar_type_php = {
     \ 'kinds' : [
         \ 'i:interfaces',
         \ 'c:classes',
-        \ 'd:constant definitions:0:0',
+        \ 'd:constant definitions',
         \ 'f:functions',
     \ ],
 \ }
@@ -364,7 +379,7 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " Ale settings
 "-------------------------
 "
-
+let g:ale_enabled = 1
 let g:ale_loclist_msg_format='%linter% | %s'
 let g:ale_sign_warning = '▲'
 let g:ale_sign_error = '✗'
@@ -376,6 +391,13 @@ let g:ale_history_log_output = 1
 let g:ale_php_phpstan_executable = expand('~/.config/composer/vendor/bin/phpstan')
 let g:ale_php_phpcbf_executable = expand('~/.config/composer/vendor/bin/phpcbf')
 let g:ale_php_phpcs_executable = expand('~/.config/composer/vendor/bin/phpcs')
+
+let g:ale_linters = {
+\  'javascript': ['eslint']
+\}
+let g:ale_fixers = {
+\  'javascript': ['eslint']
+\}
 
 "
 "-------------------------
@@ -390,6 +412,19 @@ endif
 set grepprg=ag
 let g:grep_cmd_opts = '--line-numbers --noheading'
 
+
+"
+"-------------------------
+" Tern for vim
+"-------------------------
+"
+
+let g:tern#command = ["/home/work/.npm-global/bin/tern"]
+let g:tern#arguments = ["--persistent"]
+let g:tern_show_argument_hints = 'on_hold'
+let g:tern_show_signature_in_pum = 1
+autocmd FileType javascript setlocal omnifunc=tern#Complete
+
 "
 "-------------------------
 " Deoplete
@@ -397,8 +432,15 @@ let g:grep_cmd_opts = '--line-numbers --noheading'
 "
 
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#omni_patterns = get(g:,'deoplete#omni_patterns',{})
+call deoplete#custom#var('omni', 'input_patterns', {
+	\ 'javascript': '[^. *\t]\.\w*',
+	\ })
+"
+" if !exists('g:deoplete#omni#input_patterns')
+"   let g:deoplete#omni#input_patterns = {}
+" endif
 call deoplete#custom#source('_', 'max_menu_width', 150)
-
 "
 "-------------------------
 " Echodoc
@@ -419,6 +461,8 @@ let g:echodoc#type = 'popup'
 au BufRead,BufNewFile *.phps set filetype=php
 au BufRead,BufNewFile *.phtml set filetype=php
 autocmd FileType php setlocal omnifunc=phpactor#Complete
+
+ab xclass <C-R>=expand('%:t:r')<CR>
 
 "
 "-------------------------
@@ -450,6 +494,15 @@ function! HookFunc()
   return "function " . f . "_"
 endfunction
 
+" Show syntax highlighting groups for word under cursor
+nmap <leader>z :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+
 "
 "-------------------------
 " Hotkeys
@@ -459,6 +512,8 @@ endfunction
 let mapleader = ';'
 
 imap kj <esc>
+
+map <leader>ps :e ~/.vimprojects<CR>
 
 " Space list pages when in normal mode
 nmap <Space> <PageDown>
@@ -492,9 +547,9 @@ vmap <F5> <esc>:Buffers<cr>
 imap <F5> <esc><esc>:Buffers<cr>
 
 " F7 - NERDTree
-nmap <silent> <F7> :NERDTreeToggle<CR>
-vmap <silent> <F7> <esc>:NERDTreeToggle<CR>i
-imap <silent> <F7> <esc>:NERDTreeToggle<CR>i
+nmap <silent> <leader>m :NERDTreeToggle<CR>
+vmap <silent> <leader>m <esc>:NERDTreeToggle<CR>i
+imap <silent> <leader>m <esc>:NERDTreeToggle<CR>i
 
 " F10 - buffer delete
 map <F10> :bd<cr>
@@ -502,9 +557,9 @@ vmap <F10> <esc>:bd<cr>
 imap <F10> <esc>:bd<cr>
 
 " F11 - show tagbar window
-map <leader>tb :TagbarToggle<cr>
-vmap <leader>tb <esc>:TagbarToggle<cr>
-imap <leader>tb <esc>:TagbarToggle<cr>
+map <leader>t :TagbarToggle<cr>
+vmap <leader>t <esc>:TagbarToggle<cr>
+imap <leader>t <esc>:TagbarToggle<cr>
 
 " < & > - indents blocks
 vmap <s-tab> <gv
@@ -522,6 +577,12 @@ map <C-tab> <Esc>:bnext<cr>
 " Show highlight group for character under cursor
 map <leader>a :call SyntaxAttr()<CR>
 
+" highlight word under cursor
+map <leader>h :match StatusLineTerm /<C-R><C-W>/<CR>
+
+" Close current buffer
+map <leader>c :bd<cr>
+
 " Open FZF file search dialog
 map <leader>fo :Files<cr>
 " nmap <leader>f :Files<CR>
@@ -530,7 +591,8 @@ map <leader>fo :Files<cr>
 map <leader>ff :ALEFix<cr>
 
 " Terminate current string with ; in normal mode (PHP)
-nmap ;; $a;<esc>
+imap ;; <esc>A;<esc>
+nmap <leader>; A;<esc>
 
 " phpDocumentor
 let g:pdv_cfg_annotation_Package = 0
@@ -540,7 +602,13 @@ vmap <A-P> :call PhpDocRange()<CR>
 
 " Git
 nmap <leader>gs :15G<CR>
-nmap <leader>gl :Glog<CR>
+nmap <leader>gl :Git log<CR>
 nmap <leader>gb :GBranches<CR>
+nmap <leader>gp :Git pull<CR>
 
-source ~/.vimrc.local
+" Open .vimrc
+nmap <leader>e :e ~/.vimrc<CR>
+
+if filereadable($HOME . "/.vimrc.local")
+    source $HOME/.vimrc.local
+endif
