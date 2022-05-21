@@ -31,7 +31,7 @@ if [[ -f "${HOME}/.vimrc" || -d "$HOME/.vim" ]]; then
 fi
 
 echo "Installing the required PHP packages globally via Composer..."
-$(composer global require friendsofphp/php-cs-fixer:2.16.4 divante-ltd/pimcore-coding-standards:0.1.4 magento-ecg/coding-standard:3.1 phpstan/phpstan:0.12.36 phpcompatibility/php-compatibility:9.3.5 magento/magento-coding-standard:5.0)
+$(composer global require drupal/coder friendsofphp/php-cs-fixer:2.16.4 divante-ltd/pimcore-coding-standards:0.1.4 magento-ecg/coding-standard:3.1 phpstan/phpstan:0.12.36 phpcompatibility/php-compatibility:9.3.5 magento/magento-coding-standard:5.0)
 if [[ $? -ne 0 ]]; then
     echo "Failed to install required packages. Exiting..."
     exit 1
