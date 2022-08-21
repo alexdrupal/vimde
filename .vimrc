@@ -18,10 +18,16 @@ Plug 'ludovicchabant/vim-gutentags'
 " Snippets
 Plug 'sirver/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'sniphpets/sniphpets'
+Plug 'sniphpets/sniphpets-symfony'
 
 " Colors
 Plug 'joshdick/onedark.vim'
 Plug 'alexdrupal/vim-darcula-colors'
+Plug 'arzg/vim-colors-xcode'
+Plug 'chiendo97/intellij.vim'
+Plug 'vim-scripts/kate.vim'
+Plug 'vim-scripts/SyntaxAttr.vim'
 
 " Git
 Plug 'airblade/vim-gitgutter'
@@ -66,6 +72,7 @@ Plug 'dart-lang/dart-vim-plugin'
 Plug 'Shougo/deoplete.nvim', {'commit': '7535773f9dba82bd8077a2319b7aa8b275dde25a'}
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
+" Plug 'kristijanhusak/deoplete-phpactor'
 
 " Python
 Plug 'deoplete-plugins/deoplete-jedi'
@@ -96,50 +103,29 @@ call plug#end()
 " map <C-]> :call MagentoTagFunc()<CR>
 
 function! VimDeInitializeComposerProject(...) abort
-    " we try to use PhpactorGotoDefinition function instead of tags for
-    " composer projects
-    nmap <C-]> :PhpactorGotoDefinition<CR>
-    let g:ale_linters = {
-        \ 'php': ['php', 'phpstan'],
-    \}
+    " TODO Add specific settings for composer based projects OR remove
+endfunction
 
+function! VimDeInitializeGitlabProject(...) abort
+    let g:fugitive_gitlab_domains = {'git@gitrepo.superiorcommunications.com': 'https://gitrepo.superiorcommunications.com'}
 endfunction
 
 function! VimDeInitializeDrupalProject(...) abort
+    set tabstop=2
+    set shiftwidth=2
 endfunction
 
 function! VimDeInitializePimcoreProject(...) abort
-    let g:ale_linters = {
-        \ 'php': ['php', 'phpcs', 'phpstan'],
-    \}
-
-    let g:ale_fixers = {
-        \ 'php': ['phpcbf'],
-    \}
-
-    " Set the default code style to Divante for PIMCore5
-    let g:ale_php_phpcs_standard = expand('~/.config/composer/vendor/divante-ltd/pimcore-coding-standards/Standards/Pimcore5/ruleset.xml')
-    let g:ale_php_phpcbf_standard = expand('~/.config/composer/vendor/divante-ltd/pimcore-coding-standards/Standards/Pimcore5/ruleset.xml')
+    " TODO Add specific settings for pimcore projects OR remove
 endfunction
 
 function! VimDeInitializeMagento1Project(...) abort
-    let g:ale_linters = {
-        \ 'php': ['php'],
-    \}
 endfunction
 
 function! VimDeInitializeJavascriptProject(...) abort
 endfunction
 
 function! VimDeInitializeMagento2Project(...) abort
-    let g:ale_linters = {
-        \ 'php': ['php', 'phpcs', 'phpstan'],
-    \}
-
-    let g:ale_fixers = {
-        \ 'php': ['phpcbf'],
-    \}
-
     " Set to Magento2 coding standard
     let g:ale_php_phpcs_standard = expand('~/.config/composer/vendor/magento/magento-coding-standard/Magento2/ruleset.xml')
     let g:ale_php_phpcbf_standard = expand('~/.config/composer/vendor/magento/magento-coding-standard/Magento2/ruleset.xml')
@@ -338,6 +324,14 @@ let g:lightline = {
 
 "
 "-------------------------
+" NERDTree
+"-------------------------
+"
+
+let NERDTreeShowHidden=1
+
+"
+"-------------------------
 " Tagbar
 "-------------------------
 "
@@ -388,14 +382,14 @@ highlight link ALEErrorSign Error
 
 let g:ale_linters_explicit = 1
 let g:ale_history_log_output = 1
-let g:ale_php_phpstan_executable = expand('~/.config/composer/vendor/bin/phpstan')
-let g:ale_php_phpcbf_executable = expand('~/.config/composer/vendor/bin/phpcbf')
-let g:ale_php_phpcs_executable = expand('~/.config/composer/vendor/bin/phpcs')
+let g:ale_php_phpstan_level = 8
 
 let g:ale_linters = {
+\  'php': ['php', 'phpcs', 'phpstan'],
 \  'javascript': ['eslint']
 \}
 let g:ale_fixers = {
+\  'php': ['phpcbf'],
 \  'javascript': ['eslint']
 \}
 
@@ -406,12 +400,44 @@ let g:ale_fixers = {
 "
 
 if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
+  let g:ackprg = 'ag --vimgrep --hidden '
 endif
 
 set grepprg=ag
 let g:grep_cmd_opts = '--line-numbers --noheading'
 
+"
+"-------------------------
+" FZF
+"-------------------------
+"
+
+command! -bang -nargs=? -complete=dir HFiles
+  \ call fzf#vim#files(<q-args>, {'source': 'ag --hidden --ignore .git -g ""'}, <bang>0)
+
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(
+  \   <q-args>,
+  \   '--hidden --ignore=*.sql --ignore=.git --color-path 41 --color-match "1;35" --color-line-number 32',
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0
+  \ )
+
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 
 "
 "-------------------------
@@ -432,6 +458,12 @@ autocmd FileType javascript setlocal omnifunc=tern#Complete
 "
 
 let g:deoplete#enable_at_startup = 1
+"let g:deoplete#auto_complete_delay=150
+
+" let g:deoplete#sources = {}
+" let g:deoplete#sources._=['omni', 'buffer', 'member', 'tag', 'ultisnips', 'file']
+" let g:deoplete#omni#functions = {}
+" let g:deoplete#omni#functions.php = [ 'phpactor#Complete' ]
 let g:deoplete#omni_patterns = get(g:,'deoplete#omni_patterns',{})
 call deoplete#custom#var('omni', 'input_patterns', {
 	\ 'javascript': '[^. *\t]\.\w*',
@@ -441,6 +473,7 @@ call deoplete#custom#var('omni', 'input_patterns', {
 "   let g:deoplete#omni#input_patterns = {}
 " endif
 call deoplete#custom#source('_', 'max_menu_width', 150)
+let g:deoplete#sources#jedi#show_docstring = 1
 "
 "-------------------------
 " Echodoc
@@ -451,6 +484,7 @@ set cmdheight=2
 let g:echodoc_enable_at_startup = 1
 set noshowmode
 let g:echodoc#type = 'popup'
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 "
 "-------------------------
@@ -461,6 +495,7 @@ let g:echodoc#type = 'popup'
 au BufRead,BufNewFile *.phps set filetype=php
 au BufRead,BufNewFile *.phtml set filetype=php
 autocmd FileType php setlocal omnifunc=phpactor#Complete
+autocmd FileType php nmap <C-]> :PhpactorGotoDefinition<CR>
 
 ab xclass <C-R>=expand('%:t:r')<CR>
 
@@ -584,8 +619,10 @@ map <leader>h :match StatusLineTerm /<C-R><C-W>/<CR>
 map <leader>c :bd<cr>
 
 " Open FZF file search dialog
-map <leader>fo :Files<cr>
-" nmap <leader>f :Files<CR>
+map <leader>fo :HFiles<cr>
+
+" Open FZF :Ag search
+map <leader>f :Ag
 
 " Fix formatting using ALE for current buffer
 map <leader>ff :ALEFix<cr>
